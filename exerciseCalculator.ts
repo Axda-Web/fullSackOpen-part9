@@ -11,7 +11,31 @@ interface Result {
   average: number;
 }
 
-const calculateExercises = (stats: number[], target: number): Result => {
+interface ExerciseCalculatorArgs {
+  target: number;
+  stats: number[];
+}
+
+const parseExerciseCalculatorArguments = (
+  args: string[]
+): ExerciseCalculatorArgs => {
+  if (args.length < 4) throw new Error("Not enough arguments");
+  if (args.length > 10) throw new Error("Too many arguments");
+
+  const [target, ...stats] = process.argv.slice(2);
+  const isStatNumbers = stats.every((x) => !isNaN(Number(x)));
+
+  if (!isNaN(Number(target)) && isStatNumbers) {
+    return {
+      target: Number(target),
+      stats: stats.map((x) => Number(x)),
+    };
+  } else {
+    throw new Error("Provided values were not numbers!");
+  }
+};
+
+const calculateExercises = (target: number, stats: number[]): Result => {
   const periodLength = stats.length;
   const trainingDays = stats.filter((day) => day !== 0).length;
   const average = stats.reduce((a, b) => a + b) / periodLength;
@@ -51,4 +75,13 @@ const calculateExercises = (stats: number[], target: number): Result => {
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const { target, stats } = parseExerciseCalculatorArguments(process.argv);
+  console.log(calculateExercises(target, stats));
+} catch (error: unknown) {
+  let errorMessage = "Something bad happened.";
+  if (error instanceof Error) {
+    errorMessage += " Error: " + error.message;
+  }
+  console.log(errorMessage);
+}
