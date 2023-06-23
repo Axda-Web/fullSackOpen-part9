@@ -13,7 +13,7 @@ export const parseBimCalculatorArguments = (
       parsedWeight: Number(weight),
     };
   } else {
-    throw new Error("Provided values were not numbers!");
+    throw new Error("malformated parameters");
   }
 };
 

@@ -12,40 +12,42 @@ interface Result {
 }
 
 interface ExerciseCalculatorArgs {
-  target: number;
-  stats: number[];
+  parsedDailyExercices: number[];
+  parsedTarget: number;
 }
 
-const parseExerciseCalculatorArguments = (
-  args: string[]
+export const parseExerciseCalculatorArguments = (
+  daily_exercises: number[],
+  target: number
 ): ExerciseCalculatorArgs => {
-  if (args.length < 4) throw new Error("Not enough arguments");
-  if (args.length > 10) throw new Error("Too many arguments");
+  const isDailyExNumbers = daily_exercises.every((x) => !isNaN(Number(x)));
+  const isDailyExValidLength =
+    daily_exercises.length > 0 && daily_exercises.length <= 7;
 
-  const [target, ...stats] = process.argv.slice(2);
-  const isStatNumbers = stats.every((x) => !isNaN(Number(x)));
-
-  if (!isNaN(Number(target)) && isStatNumbers) {
+  if (!isNaN(Number(target)) && isDailyExNumbers && isDailyExValidLength) {
     return {
-      target: Number(target),
-      stats: stats.map((x) => Number(x)),
+      parsedDailyExercices: daily_exercises,
+      parsedTarget: target,
     };
   } else {
-    throw new Error("Provided values were not numbers!");
+    throw new Error("malformated parameters");
   }
 };
 
-const calculateExercises = (target: number, stats: number[]): Result => {
-  const periodLength = stats.length;
-  const trainingDays = stats.filter((day) => day !== 0).length;
-  const average = stats.reduce((a, b) => a + b) / periodLength;
-  const success = average >= target;
+export const calculateExercises = ({
+  parsedDailyExercices,
+  parsedTarget,
+}: ExerciseCalculatorArgs): Result => {
+  const periodLength = parsedDailyExercices.length;
+  const trainingDays = parsedDailyExercices.filter((day) => day !== 0).length;
+  const average = parsedDailyExercices.reduce((a, b) => a + b) / periodLength;
+  const success = average >= parsedTarget;
 
   let rating: Rating;
 
-  if (average < target - 1) {
+  if (average < parsedTarget - 1) {
     rating = 1;
-  } else if (average >= target - 1 && average < target) {
+  } else if (average >= parsedTarget - 1 && average < parsedTarget) {
     rating = 2;
   } else {
     rating = 3;
@@ -70,18 +72,7 @@ const calculateExercises = (target: number, stats: number[]): Result => {
     success,
     rating,
     ratingDescription,
-    target,
+    target: parsedTarget,
     average,
   };
 };
-
-try {
-  const { target, stats } = parseExerciseCalculatorArguments(process.argv);
-  console.log(calculateExercises(target, stats));
-} catch (error: unknown) {
-  let errorMessage = "Something bad happened.";
-  if (error instanceof Error) {
-    errorMessage += " Error: " + error.message;
-  }
-  console.log(errorMessage);
-}
