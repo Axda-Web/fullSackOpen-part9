@@ -1,11 +1,22 @@
 import { useState } from "react";
+import axios, { AxiosError } from "axios";
 import diaryService from "../services/diaryService";
-import { NewDiary, Diaries } from "../types";
+import { NewDiary, Diaries, NotificationType } from "../types";
+
+import Notification from "./Notification";
 
 type NewDiaryFormProps = {
+  notification: NotificationType | null;
+  setNotification: React.Dispatch<
+    React.SetStateAction<NotificationType | null>
+  >;
   setDiaries: React.Dispatch<React.SetStateAction<Diaries>>;
 };
-const NewDiaryForm = ({ setDiaries }: NewDiaryFormProps) => {
+const NewDiaryForm = ({
+  notification,
+  setNotification,
+  setDiaries,
+}: NewDiaryFormProps) => {
   const [newDiary, setNewDiary] = useState<NewDiary>({
     date: "",
     weather: "",
@@ -25,13 +36,41 @@ const NewDiaryForm = ({ setDiaries }: NewDiaryFormProps) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const addedDiary = await diaryService.add(newDiary);
-    setDiaries((prevDiaries) => [...prevDiaries, addedDiary]);
+    try {
+      const addedDiary = await diaryService.add(newDiary);
+      setNotification({
+        type: "success",
+        content: "Diary added successfully",
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      setDiaries((prevDiaries) => [...prevDiaries, addedDiary]);
+      setNewDiary({
+        date: "",
+        weather: "",
+        visibility: "",
+        comment: "",
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setNotification({
+          type: "error",
+          content: error.response?.data,
+        });
+        setTimeout(() => {
+          setNotification(null);
+        }, 3000);
+      }
+    }
   };
 
   return (
     <div>
       <h2>Add new entry</h2>
+      {notification && (
+        <Notification type={notification.type} content={notification.content} />
+      )}
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="date">Date</label>
