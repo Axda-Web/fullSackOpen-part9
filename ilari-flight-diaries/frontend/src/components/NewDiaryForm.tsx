@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import diaryService from "../services/diaryService";
 import { NewDiary, Diaries, NotificationType } from "../types";
 
@@ -75,6 +75,7 @@ const NewDiaryForm = ({
         <div>
           <label htmlFor="date">Date</label>
           <input
+            required
             name="date"
             value={newDiary.date}
             onChange={handleChange}
@@ -83,28 +84,98 @@ const NewDiaryForm = ({
           />
         </div>
         <div>
-          <label htmlFor="weather">Weather</label>
+          <span style={{ marginRight: 10 }}>Visibility</span>
+          <label htmlFor="great">great</label>
           <input
-            name="weather"
-            value={newDiary.weather}
+            required
+            checked
+            type="radio"
+            name="visibility"
+            value="great"
             onChange={handleChange}
-            id="weather"
-            type="text"
+            id="great"
+          />
+          <label htmlFor="good">good</label>
+          <input
+            required
+            type="radio"
+            name="visibility"
+            value="good"
+            onChange={handleChange}
+            id="good"
+          />
+          <label htmlFor="ok">ok</label>
+          <input
+            required
+            type="radio"
+            name="visibility"
+            value="ok"
+            onChange={handleChange}
+            id="ok"
+          />
+          <label htmlFor="poor">poor</label>
+          <input
+            required
+            type="radio"
+            name="visibility"
+            value="poor"
+            onChange={handleChange}
+            id="poor"
           />
         </div>
         <div>
-          <label htmlFor="visibility">Visibility</label>
+          <span style={{ marginRight: 10 }}>Weather</span>
+          <label htmlFor="sunny">sunny</label>
           <input
-            name="visibility"
-            value={newDiary.visibility}
+            required
+            checked
+            name="weather"
+            value="sunny"
             onChange={handleChange}
-            id="visibility"
-            type="text"
+            id="sunny"
+            type="radio"
+          />
+          <label htmlFor="rainy">rainy</label>
+          <input
+            required
+            name="weather"
+            value="rainy"
+            onChange={handleChange}
+            id="rainy"
+            type="radio"
+          />
+          <label htmlFor="cloudy">cloudy</label>
+          <input
+            required
+            name="weather"
+            value="cloudy"
+            onChange={handleChange}
+            id="cloudy"
+            type="radio"
+          />
+          <label htmlFor="stormy">stormy</label>
+          <input
+            required
+            name="weather"
+            value="stormy"
+            onChange={handleChange}
+            id="stormy"
+            type="radio"
+          />
+          <label htmlFor="windy">windy</label>
+          <input
+            required
+            name="weather"
+            value="windy"
+            onChange={handleChange}
+            id="windy"
+            type="radio"
           />
         </div>
         <div>
           <label htmlFor="comment">Comment</label>
           <input
+            required
             name="comment"
             value={newDiary.comment}
             onChange={handleChange}
