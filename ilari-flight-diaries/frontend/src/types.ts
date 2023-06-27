@@ -24,3 +24,8 @@ export interface Diary {
 export type NewDiary = Omit<Diary, "id">;
 
 export type Diaries = Diary[];
+
+export interface NotificationType {
+  content: string;
+  type: string;
+}
