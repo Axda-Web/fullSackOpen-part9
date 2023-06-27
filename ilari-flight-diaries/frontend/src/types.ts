@@ -21,4 +21,6 @@ export interface Diary {
   comment: string;
 }
 
+export type NewDiary = Omit<Diary, "id">;
+
 export type Diaries = Diary[];
