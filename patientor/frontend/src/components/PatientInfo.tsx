@@ -8,6 +8,8 @@ import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import Man4Icon from "@mui/icons-material/Man4";
 
+import EntryDetails from "./EntryDetails";
+
 const PatientInfo = () => {
   const [patient, setPatient] = useState<Patient>();
   const [diagnosis, setDiagnosis] = useState<Diagnosis[]>();
@@ -40,20 +42,13 @@ const PatientInfo = () => {
       </div>
       <div>
         <h3>Entries</h3>
-        {patient?.entries.map((entry) => (
-          <div key={entry.id}>
-            <p>
-              {entry.date} {entry.description}
-            </p>
-            <ul>
-              {entry.diagnosisCodes?.map((code) => (
-                <li key={code}>
-                  {code} {diagnosis?.find((d) => d.code === code)?.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {patient?.entries.length ? (
+          patient?.entries.map((entry) => (
+            <EntryDetails key={entry.id} entry={entry} diagnosis={diagnosis!} />
+          ))
+        ) : (
+          <p>No entries...</p>
+        )}
       </div>
     </>
   );
