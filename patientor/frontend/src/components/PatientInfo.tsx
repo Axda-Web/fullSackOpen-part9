@@ -27,13 +27,30 @@ const PatientInfo = () => {
       genderIcon = <Man4Icon />;
   }
   return (
-    <div>
-      <h3>
-        {patient?.name} {genderIcon}
-      </h3>
-      <p>ssh: {patient?.ssn}</p>
-      <p>occupation: {patient?.occupation}</p>
-    </div>
+    <>
+      <div>
+        <h1>
+          {patient?.name} {genderIcon}
+        </h1>
+        <p>ssh: {patient?.ssn}</p>
+        <p>occupation: {patient?.occupation}</p>
+      </div>
+      <div>
+        <h3>Entries</h3>
+        {patient?.entries.map((entry) => (
+          <div key={entry.id}>
+            <p>
+              {entry.date} {entry.description}
+            </p>
+            <ul>
+              {entry.diagnosisCodes?.map((code) => (
+                <li key={code}>{code}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 export default PatientInfo;
