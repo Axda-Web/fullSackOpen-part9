@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import patientService from "../services/patients";
-import { Patient } from "../types";
+import diagnoseService from "../services/diagnosis";
+import { Patient, Diagnosis } from "../types";
 import { useParams } from "react-router-dom";
 
 import MaleIcon from "@mui/icons-material/Male";
@@ -9,9 +10,11 @@ import Man4Icon from "@mui/icons-material/Man4";
 
 const PatientInfo = () => {
   const [patient, setPatient] = useState<Patient>();
+  const [diagnosis, setDiagnosis] = useState<Diagnosis[]>();
   const { id } = useParams();
   useEffect(() => {
     patientService.getByid(id!).then((data) => setPatient(data));
+    diagnoseService.getAll().then((data) => setDiagnosis(data));
   }, [id]);
 
   let genderIcon;
@@ -44,7 +47,9 @@ const PatientInfo = () => {
             </p>
             <ul>
               {entry.diagnosisCodes?.map((code) => (
-                <li key={code}>{code}</li>
+                <li key={code}>
+                  {code} {diagnosis?.find((d) => d.code === code)?.name}
+                </li>
               ))}
             </ul>
           </div>
