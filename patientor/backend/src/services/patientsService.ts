@@ -17,7 +17,7 @@ const getPatient = (id: string): Patient => {
   if (!patient) {
     throw new Error("Patient not found");
   }
-  return { ...patient, entries: [] };
+  return patient;
 };
 
 const addPatient = (entries: NewPatient): Patient => {
